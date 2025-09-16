@@ -1,0 +1,48 @@
+{
+  "poll_seconds": 120,
+  "qstat_candidates": ["/opt/pbs/bin/qstat", "qstat"],
+  "columns": ["user", "egroup", "jobid", "queue", "start", "wall", "mem", "mem_pct", "cpu_now", "cpu_eff", "hosts"],
+  "column_widths": {
+    "user": 10, "egroup": 8, "jobid": 6, "queue": 10,
+    "start": 14, "wall": 10, "mem": 7, "mem_pct": 5,
+    "cpu_now": 6, "cpu_eff": 6, "hosts": 30
+  },
+  "column_mins": {
+    "user": 4, "egroup": 4, "jobid": 4, "queue": 6,
+    "start": 14, "wall": 10, "mem": 5, "mem_pct": 4,
+    "cpu_now": 5, "cpu_eff": 5, "hosts": 8
+  },
+  "narrow_hide_order": ["hosts", "mem_pct", "egroup"],
+  "ui": { "dim_cpu_below_pct": 0.0, "ellipsis": "...", "avoid_lr_corner": true },
+  "format": { "wall_right_align": true, "wall_width": 10, "host_compaction": true },
+  "sort": { "key": "cpu_eff", "ascending": true },
+
+  "ewma": { "windows_seconds": [60, 300, 900], "metric": "cpu_now_pct" },
+
+  "cpu_now": { "source": "cput_delta", "divide_by_ncpus": true, "clip_0_100": true },
+  "egroup_attr_order": ["egroup", "group_list", "group"],
+
+  "queue_memory_defaults": {
+    "parexp":   { "per_node_gib": 114 },
+    "parfeq":   { "per_node_gib": 490 },
+    "feqgpu":   { "per_node_gib": 741 },
+    "paralela": { "per_node_gib": 490 },
+    "par128":   { "per_node_gib": 490, "nodes": 1 }
+  },
+    "root_extra": {
+        "enabled": true,
+        "timeout_secs": 6,
+        "commands": [
+            { "label": "Full name",
+              "cmd": "getent passwd {user} | cut -d: -f5 | cut -d, -f1" },
+            { "label": "Email",
+              "cmd": "ldapsearch -x \"(uid={user})\" maildrop | awk -F': ' '/^maildrop:/{print $2; exit}'" },
+            { "label": "Groups",
+              "cmd": "id -nG {user} | tr ' ' ','" },
+            { "label": "PBS script",
+              "cmd": "printjob -s {jobid}" }
+        ]
+    }
+
+}
+
