@@ -21,11 +21,19 @@
 
   "cpu_now": { "source": "cput_delta", "divide_by_ncpus": true, "clip_0_100": true },
   "egroup_attr_order": ["egroup", "group_list", "group"],
-
+  "persistence": {
+    "enabled": false,
+    "path": "/var/lib/pbstop",
+    "mode": "aggregate",
+    "top_k": 50,
+    "retention_days": 30
+  },
   "queue_memory_defaults": {
     "parexp":   { "per_node_gib": 114 },
+    "parfem":   { "per_node_gib": 114 },
     "parfeq":   { "per_node_gib": 490 },
     "feqgpu":   { "per_node_gib": 741 },
+    "testes":   { "per_node_gib": 10  },
     "paralela": { "per_node_gib": 490 },
     "par128":   { "per_node_gib": 490, "nodes": 1 }
   },
